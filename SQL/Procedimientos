@@ -7,10 +7,30 @@ CREATE PROCEDURE insertarUsuarios(IN usuario varchar(50), IN clave varchar(200))
   END
 //
 
-
 DELIMITER //
 CREATE PROCEDURE buscarTodosUsuarios()
     BEGIN
-        select usuarios.nIdUsuario , usuarios.sUsuario from usuarios;
+        SELECT usuarios.nIdUsuario, usuarios.sUsuario FROM usuarios;
     END
+//
+
+DELIMITER //
+CREATE PROCEDURE insertarDepartamento(IN depto varchar(100))
+  BEGIN
+    INSERT INTO departamento(sDepto) VALUES(depto);
+  END
+//
+
+DELIMITER //
+CREATE PROCEDURE insertarEmpleadas(IN nombre varchar(100), IN depto int(11))
+  BEGIN
+    INSERT INTO empleadas(sNombre, nIdDepto) VALUES(nombre, depto);
+  END
+//
+
+DELIMITER //
+CREATE PROCEDURE insertarEquipos(IN st varchar(30), IN depto int(11))
+  BEGIN
+    INSERT INTO equipos(sSt, nIdDepto) VALUES(st, depto);
+  END
 //
