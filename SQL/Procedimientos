@@ -4,3 +4,10 @@ CREATE PROCEDURE insertarUsuarios(IN usuario varchar(50), IN clave varchar(200))
     INSERT INTO usuarios(sUsuario, sClave) VALUES(usuario, sha2(clave));
   END
 //
+
+DELIMITER //
+CREATE PROCEDURE insertarUsuarios2(IN usuario varchar(50), IN clave varchar(200))
+  BEGIN
+    INSERT INTO usuarios(sUsuario, sClave) VALUES(usuario, sha2(clave));
+  END
+//
