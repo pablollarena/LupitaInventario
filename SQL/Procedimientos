@@ -15,7 +15,7 @@ CREATE PROCEDURE buscarTodosUsuarios()
     END
 //
 
-DELIMITER//
+DELIMITER //
 CREATE PROCEDURE `consultaEquipos` ()
 BEGIN
 select inventario.nIdInventario, equipos.nIdEquipo,equipos.sSt from inventario
