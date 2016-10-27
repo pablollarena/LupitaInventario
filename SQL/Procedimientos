@@ -14,3 +14,14 @@ CREATE PROCEDURE buscarTodosUsuarios()
         select usuarios.nIdUsuario , usuarios.sUsuario from usuarios;
     END
 //
+
+DELIMITER//
+CREATE PROCEDURE `consultaEquipos` ()
+BEGIN
+select inventario.nIdInventario, equipos.nIdEquipo,equipos.sSt from inventario
+ left outer  join equipos
+on  inventario.nIdEquipo = equipos.nIdEquipo;
+
+END
+
+//
