@@ -18,13 +18,28 @@ CREATE PROCEDURE buscarTodosUsuarios()
 DELIMITER //
 CREATE PROCEDURE `consultaEquipos` ()
 BEGIN
-select inventario.nIdInventario, equipos.nIdEquipo,equipos.sSt from inventario
+select inventario.nIdInventario, equipos.nIdEquipo,equipos.sSt,departamento.sDepto from inventario
  left outer  join equipos
-on  inventario.nIdEquipo = equipos.nIdEquipo;
+on  inventario.nIdEquipo = equipos.nIdEquipo
+left outer join departamento
+on departamento.nIdDepto = equipos.nIdDepto;
+END
+
+//
+
+DELIMITER //
+CREATE PROCEDURE `consultaEmpleadoDepto` ()
+BEGIN
+SELECT inventario.nIdInventario, empleadas.nIdEmpleado,empleadas.sNombre,departamento.sDepto from inventario
+left outer join empleadas
+on inventario.nIdEmpleado = empleadas.nIdEmpleado
+left outer join departamento
+on departamento.nIdDepto = empleadas.nIdDepto;
 
 END
 
 //
+
 INSERT INTO departamento(sDepto) VALUES('TRAFICO');
 
 
@@ -41,5 +56,5 @@ INSERT INTO inventario(nIdSoftware, nIdEquipo, sVersion, nSerial, sRutaArchivo, 
 VALUES(1,1,'Versión','212321321331','ruta',1);
 
 UPDATE inventario
-SET nIdEmpleado = 2
-WHERE nIdInventario = 2;
+SET nIdEmpleado = 1
+WHERE nIdInventario = 1;
