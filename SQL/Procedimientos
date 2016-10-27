@@ -46,7 +46,6 @@ on  inventario.nIdEquipo = equipos.nIdEquipo;
 END
 
 //
-
 INSERT INTO departamento(sDepto) VALUES('TRAFICO');
 
 INSERT INTO software(sDescripcion) VALUES('Microsoft Windows 10');
