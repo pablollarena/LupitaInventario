@@ -7,6 +7,7 @@ CREATE PROCEDURE insertarUsuarios(IN usuario varchar(50), IN clave varchar(200))
   END
 //
 
+
 DELIMITER //
 CREATE PROCEDURE buscarTodosUsuarios()
     BEGIN
@@ -33,4 +34,15 @@ CREATE PROCEDURE insertarEquipos(IN st varchar(30), IN depto int(11))
   BEGIN
     INSERT INTO equipos(sSt, nIdDepto) VALUES(st, depto);
   END
+//
+
+DELIMITER//
+CREATE PROCEDURE `consultaEquipos` ()
+BEGIN
+select inventario.nIdInventario, equipos.nIdEquipo,equipos.sSt from inventario
+ left outer  join equipos
+on  inventario.nIdEquipo = equipos.nIdEquipo;
+
+END
+
 //
