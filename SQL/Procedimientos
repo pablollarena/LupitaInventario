@@ -16,6 +16,24 @@ CREATE PROCEDURE buscarTodosUsuarios()
 //
 
 DELIMITER //
+CREATE PROCEDURE generaReporte()
+ BEGIN
+     SELECT inventario.nIdInventario, software.sDescripcion, inventario.sVersion, inventario.nSerial, inventario.sRutaArchivo,
+            equipos.sSt, departamento.sDepto, empleadas.sNombre
+     FROM inventario
+     LEFT OUTER JOIN software
+     ON software.nIdSoftware = inventario.nIdSoftware
+     LEFT OUTER JOIN equipos
+     ON equipos.nIdEquipo = inventario.nIdEquipo
+     LEFT OUTER JOIN empleadas
+     ON empleadas.nIdEmpleado =  inventario.nIdEmpleado
+     LEFT OUTER JOIN departamento
+     ON departamento.nIdDepto = empleadas.nIdDepto;
+ END
+
+//
+
+DELIMITER //
 CREATE PROCEDURE `consultaEquipos` ()
 BEGIN
 select inventario.nIdInventario, equipos.nIdEquipo,equipos.sSt,departamento.sDepto from inventario
