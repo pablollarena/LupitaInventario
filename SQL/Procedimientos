@@ -1,9 +1,12 @@
 DELIMITER //
 CREATE PROCEDURE insertarUsuarios(IN usuario varchar(50), IN clave varchar(200))
   BEGIN
-    INSERT INTO usuarios(sUsuario, sClave) VALUES(usuario, sha2(clave));
+    START TRANSACTION;
+    INSERT INTO usuarios(sUsuario, sClave) VALUES(usuario, sha1(clave));
+    COMMIT;
   END
 //
+
 
 DELIMITER //
 CREATE PROCEDURE buscarTodosUsuarios()
