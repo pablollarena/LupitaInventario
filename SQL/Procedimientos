@@ -11,11 +11,11 @@ CREATE PROCEDURE insertarUsuarios(IN usuario varchar(50), IN clave varchar(200))
 DELIMITER //
 CREATE PROCEDURE buscarTodosUsuarios()
     BEGIN
-        select usuarios.nIdUsuario , usuarios.sUsuario from usuarios;
+        SELECT usuarios.nIdUsuario, usuarios.sUsuario FROM usuarios;
     END
 //
 
-DELIMITER//
+DELIMITER //
 CREATE PROCEDURE `consultaEquipos` ()
 BEGIN
 select inventario.nIdInventario, equipos.nIdEquipo,equipos.sSt from inventario
@@ -25,4 +25,21 @@ on  inventario.nIdEquipo = equipos.nIdEquipo;
 END
 
 //
+INSERT INTO departamento(sDepto) VALUES('TRAFICO');
 
+
+INSERT INTO software(sDescripcion) VALUES('Microsoft Windows 10');
+INSERT INTO equipos(sSt, nIdDepto) VALUES('AXJAJSJ1',1);
+INSERT INTO equipos(sSt, nIdDepto) VALUES('HSH1HH12',1);
+
+INSERT INTO empleadas(sNombre, nIdDepto) VALUES('Lupita Yañez', 1);
+INSERT INTO empleadas(sNombre, nIdDepto) VALUES('Gaby Chang', 1);
+
+call insertarUsuarios('pllarena','pllarena');
+
+INSERT INTO inventario(nIdSoftware, nIdEquipo, sVersion, nSerial, sRutaArchivo, nIdEmpleado)
+VALUES(1,1,'Versión','212321321331','ruta',1);
+
+UPDATE inventario
+SET nIdEmpleado = 2
+WHERE nIdInventario = 2;
