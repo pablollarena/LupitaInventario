@@ -25,3 +25,4 @@ on  inventario.nIdEquipo = equipos.nIdEquipo;
 END
 
 //
+
