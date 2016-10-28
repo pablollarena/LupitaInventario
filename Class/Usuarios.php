@@ -80,4 +80,25 @@ class Usuarios
         return $vObj;
     }
 
+    function buscarCvePassUser(){
+        $oAD = new AccesoDatos();
+        $sQuery = "";
+        $rst = null;
+        $bRet = false;
+        if($this->getUsuario() == "" AND $this->getClave() == ""){
+            throw new Exception("Usuarios->buscarCvePassUser(): error, faltan datos");
+        } else{
+            if($oAD->Conecta()){
+                $sQuery = "call buscarCvePass('".$this->getUsuario()."','".$this->getClave()."');";
+                $rst = $oAD->ejecutaQuery($sQuery);
+                $oAD->Desconecta();
+                if($rst){
+                    $this->setUsuario($rst[0][0]);
+                    $bRet = true;
+                }
+            }
+        }
+        return $bRet;
+    }
+
 }

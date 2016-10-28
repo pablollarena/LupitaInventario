@@ -12,7 +12,7 @@ class AccesoDatos
     function Conecta(){
         $bRet=false;
         try{
-            $this->oConexion=new mysqli("localhost","adminiventario","sisadmin0303","cinventario");
+            $this->oConexion=new mysqli("localhost","admininventario","sisadmin0303","cinventario");
             $this->oConexion->set_charset("utf8");
         }catch(Exception $ex){
             throw $ex;
