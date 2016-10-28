@@ -18,6 +18,8 @@ $sErr = "";
             if($oUser->buscarCvePassUser()){
                 $_SESSION['sUser'] = $oUser;
                 header("Location: ../panelAdmin.php?sNombre=".$oUser->getUsuario());
+            }else{
+                $sErr = "Datos incorrectos";
             }
         }catch (Exception $e){
             error_log($e->getFile()." ".$e->getLine()." ".$e->getMessage(),0);
@@ -28,4 +30,6 @@ $sErr = "";
         $sErr = "Faltan datos";
     }
 
+    if($sErr != "")
+        header("Location: ../error.php?sError=".$sErr);
 ?>
