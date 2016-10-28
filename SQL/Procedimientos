@@ -43,13 +43,6 @@ END
 //
 
 
-select inventario.nIdInventario, equipos.nIdEquipo,equipos.sSt,departamento.sDepto from inventario
- left outer  join equipos
-on  inventario.nIdEquipo = equipos.nIdEquipo
-left outer join departamento
-on departamento.nIdDepto = equipos.nIdDepto;
-
-
 DELIMITER //
 CREATE PROCEDURE `consultaEmpleadoDepto` ()
 BEGIN
