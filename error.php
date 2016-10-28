@@ -26,7 +26,6 @@
     <div>
         <div class="col-lg-12 text-center v-center">
             <h1>ERROR</h1>
-            <h1>Error</h1>
             <h4><?php echo $_REQUEST["sError"]; ?></h4>
             <a href="index.html">Regresar al inicio de sesión</a>
 
