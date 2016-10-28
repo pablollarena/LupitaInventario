@@ -7,11 +7,30 @@ CREATE PROCEDURE insertarUsuarios(IN usuario varchar(50), IN clave varchar(200))
   END
 //
 
+
 DELIMITER //
 CREATE PROCEDURE buscarTodosUsuarios()
     BEGIN
         SELECT usuarios.nIdUsuario, usuarios.sUsuario FROM usuarios;
     END
+//
+
+DELIMITER //
+CREATE PROCEDURE generaReporte()
+ BEGIN
+     SELECT inventario.nIdInventario, software.sDescripcion, inventario.sVersion, inventario.nSerial, inventario.sRutaArchivo,
+            equipos.sSt, departamento.sDepto, empleadas.sNombre
+     FROM inventario
+     LEFT OUTER JOIN software
+     ON software.nIdSoftware = inventario.nIdSoftware
+     LEFT OUTER JOIN equipos
+     ON equipos.nIdEquipo = inventario.nIdEquipo
+     LEFT OUTER JOIN empleadas
+     ON empleadas.nIdEmpleado =  inventario.nIdEmpleado
+     LEFT OUTER JOIN departamento
+     ON departamento.nIdDepto = empleadas.nIdDepto;
+ END
+
 //
 
 DELIMITER //
@@ -22,6 +41,23 @@ BEGIN
     ON inventario.nIdEquipo = equipos.nIdEquipo;
 END
 //
+select inventario.nIdInventario, equipos.nIdEquipo,equipos.sSt,departamento.sDepto from inventario
+ left outer  join equipos
+on  inventario.nIdEquipo = equipos.nIdEquipo
+left outer join departamento
+on departamento.nIdDepto = equipos.nIdDepto;
+END
+
+//
+
+DELIMITER //
+CREATE PROCEDURE `consultaEmpleadoDepto` ()
+BEGIN
+SELECT inventario.nIdInventario, empleadas.nIdEmpleado,empleadas.sNombre,departamento.sDepto from inventario
+left outer join empleadas
+on inventario.nIdEmpleado = empleadas.nIdEmpleado
+left outer join departamento
+on departamento.nIdDepto = empleadas.nIdDepto;
 
 DELIMITER //
 CREATE PROCEDURE insertarEquipos(IN st varchar(30), IN depto int(11))
@@ -42,6 +78,7 @@ CREATE PROCEDURE insertarRegistroInventario(IN software int(11), IN equipo int(1
     COMMIT;
   END
 //
+
 
 DELIMITER //
 CREATE PROCEDURE insertarSoftware(IN descripcion varchar(100))
@@ -77,5 +114,5 @@ INSERT INTO inventario(nIdSoftware, nIdEquipo, sVersion, nSerial, sRutaArchivo, 
 VALUES(1,1,'Versión','212321321331','ruta',1);
 
 UPDATE inventario
-SET nIdEmpleado = 2
-WHERE nIdInventario = 2;
+SET nIdEmpleado = 1
+WHERE nIdInventario = 1;
