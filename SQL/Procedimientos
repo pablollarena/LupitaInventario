@@ -7,7 +7,6 @@ CREATE PROCEDURE insertarUsuarios(IN usuario varchar(50), IN clave varchar(200))
   END
 //
 
-
 DELIMITER //
 CREATE PROCEDURE buscarTodosUsuarios()
     BEGIN
@@ -16,15 +15,52 @@ CREATE PROCEDURE buscarTodosUsuarios()
 //
 
 DELIMITER //
-CREATE PROCEDURE `consultaEquipos` ()
+CREATE PROCEDURE consultaEquipos()
 BEGIN
-select inventario.nIdInventario, equipos.nIdEquipo,equipos.sSt from inventario
- left outer  join equipos
-on  inventario.nIdEquipo = equipos.nIdEquipo;
-
+    SELECT inventario.nIdInventario, equipos.nIdEquipo,equipos.sSt FROM inventario
+    LEFT OUTER JOIN equipos
+    ON inventario.nIdEquipo = equipos.nIdEquipo;
 END
-
 //
+
+DELIMITER //
+CREATE PROCEDURE insertarEquipos(IN st varchar(30), IN depto int(11))
+  BEGIN
+    START TRANSACTION;
+    INSERT INTO equipos(sSt, nIdDepto) VALUES(st, depto);
+    COMMIT;
+  END
+//
+
+DELIMITER //
+CREATE PROCEDURE insertarRegistroInventario(IN software int(11), IN equipo int(11), IN version varchar(100),
+                                            IN sSerial varchar(100), IN ruta varchar(200), IN empleado int(11))
+  BEGIN
+    START TRANSACTION;
+    INSERT INTO inventario(nIdSoftware, nIdEquipo, sVersion, nSerial, sRutaArchivo, nIdEmpleado)
+    VALUES(software, equipo, version, sSerial, ruta, empleado);
+    COMMIT;
+  END
+//
+
+DELIMITER //
+CREATE PROCEDURE insertarSoftware(IN descripcion varchar(100))
+  BEGIN
+    START TRANSACTION;
+    INSERT INTO software(sDescripcion) VALUES(descripcion);
+    COMMIT;
+  END
+//
+
+DELIMITER //
+CREATE PROCEDURE buscarCvePass(IN usuario varchar(50), IN pass varchar(100))
+  BEGIN
+    SELECT usuarios.sUsuario FROM usuarios
+    WHERE usuarios.sUsuario = usuario AND usuarios.sClave = sha1(pass);
+  END
+//
+
+
 INSERT INTO departamento(sDepto) VALUES('TRAFICO');
 
 
