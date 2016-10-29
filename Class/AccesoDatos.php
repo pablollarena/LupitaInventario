@@ -61,6 +61,7 @@ class AccesoDatos
         }
         return $arrRS;
     }
+    //para invocar delete,update,insert y devuelve un valor entero.
     function ejecutaComando($psCommand){
         $nAfectados=-1;
         if($psCommand==""){

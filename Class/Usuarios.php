@@ -80,25 +80,60 @@ class Usuarios
         return $vObj;
     }
 
-    function buscarCvePassUser(){
+    function buscarCvePassUser()
+    {
         $oAD = new AccesoDatos();
         $sQuery = "";
         $rst = null;
         $bRet = false;
-        if($this->getUsuario() == "" AND $this->getClave() == ""){
+        if ($this->getUsuario() == "" AND $this->getClave() == "") {
             throw new Exception("Usuarios->buscarCvePassUser(): error, faltan datos");
-        } else{
-            if($oAD->Conecta()){
-                $sQuery = "call buscarCvePass('".$this->getUsuario()."','".$this->getClave()."');";
+        } else {
+            if ($oAD->Conecta()) {
+                $sQuery = "call buscarCvePass('" . $this->getUsuario() . "','" . $this->getClave() . "');";
                 $rst = $oAD->ejecutaQuery($sQuery);
                 $oAD->Desconecta();
-                if($rst){
+                if ($rst) {
                     $this->setUsuario($rst[0][0]);
                     $bRet = true;
                 }
             }
         }
         return $bRet;
+    }
+
+    function eliminar(){
+        $oAD = new AccesoDatos();
+        $sQuery = "";
+        $i = 0;
+        if($this->getIdUsuario() == 0) {
+            throw new Exception("Usuarios->eliminar(): error, faltan datos");
+        }else{
+            if($oAD->Conecta()){
+                $sQuery = "call eliminarUsuario(".$this->getIdUsuario().");";
+                $i = $oAD->ejecutaComando($sQuery);
+                $oAD->Desconecta();
+            }
+        }
+        return $i;
+    }
+
+    function  update (){
+        $oAD = new  AccesoDatos();
+        $sQuery = "";
+        $i = 0;
+
+        if ($this->getIdUsuario() == 0) {
+            throw new Exception("Usuarios->update(): error no se encontro el dato");
+
+        }else{
+            if($oAD -> Conecta()){
+                $sQuery ="call updateUsuario (".$this ->getIdUsuario().",'".$this ->getUsuario()."');";
+                $i=$oAD->ejecutaComando($sQuery);
+                $oAD->Desconecta();
+            }
+        }
+        return $i;
     }
 
 }
