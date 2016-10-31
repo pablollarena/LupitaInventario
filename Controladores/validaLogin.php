@@ -17,7 +17,7 @@ $sErr = "";
         try{
             if($oUser->buscarCvePassUser()){
                 $_SESSION['sUser'] = $oUser;
-                header("Location: ../panelAdmin.php?sNombre=".$oUser->getUsuario());
+                header("Location: ../panelAdmin.php");
             }else{
                 $sErr = "Datos incorrectos";
             }
