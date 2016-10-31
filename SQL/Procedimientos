@@ -111,3 +111,10 @@ VALUES(1,1,'Versión','212321321331','ruta',1);
 UPDATE inventario
 SET nIdEmpleado = 1
 WHERE nIdInventario = 1;
+
+DELIMITER //
+CREATE PROCEDURE buscarDatosUsuario(IN usuario int(11))
+  BEGIN
+    SELECT usuarios.nIdUsuario, usuarios.sUsuario FROM usuarios WHERE usuarios.nIdUsuario = usuario;
+  END
+//
