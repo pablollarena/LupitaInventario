@@ -86,4 +86,15 @@ class Software
         return $i;
     }
 
+    function updateAquipos (){
+        $oAD =new  AccesoDatos();
+        $sQuery="";
+        $i=0;
+
+        if ($this->getIdSoftware() ==0){
+
+        }
+
+    }
+
 }
