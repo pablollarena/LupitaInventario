@@ -1,6 +1,6 @@
 ﻿/* Dark Admin Bootstrap Theme by PrepBootstrap - http://www.prepbootstrap.com */
 html {
-  font-family: sans-serif;
+
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
 }
@@ -98,8 +98,6 @@ code,
 kbd,
 pre,
 samp {
-  font-family: monospace, monospace;
-  font-size: 1em;
 }
 button,
 input,
@@ -260,12 +258,9 @@ th {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-html {
-  font-size: 62.5%;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
+
 body {
-  font-family: "Droid Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
   font-size: 14px;
   line-height: 1.42857143;
   color: #BDBDBD;
@@ -275,7 +270,7 @@ input,
 button,
 select,
 textarea {
-  font-family: inherit;
+  font-family: arial, sans-serif;
   font-size: inherit;
   line-height: inherit;
 }
@@ -354,7 +349,7 @@ h6,
 .h4,
 .h5,
 .h6 {
-  font-family: "Droid Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
   font-weight: 500;
   line-height: 1.1;
   color: #ffffff;
@@ -491,7 +486,7 @@ cite {
   text-align: justify;
 }
 .text-muted {
-  color: #BDBDBD;
+  color: #000000;
 }
 .text-primary {
   color: #2a9fd6;
@@ -681,9 +676,7 @@ address {
 code,
 kbd,
 pre,
-samp {
-  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-}
+
 code {
   padding: 2px 4px;
   font-size: 90%;
@@ -1687,7 +1680,7 @@ output {
   padding: 8px 12px;
   font-size: 14px;
   line-height: 1.42857143;
-  color: #BDBDBD;
+  color: #0f0f0f;
   background-color: #ffffff;
   background-image: none;
   border: 1px solid #282828;
@@ -2306,7 +2299,7 @@ fieldset[disabled] .btn-link {
 fieldset[disabled] .btn-link:hover,
 .btn-link[disabled]:focus,
 fieldset[disabled] .btn-link:focus {
-  color: #BDBDBD;
+  color: #0b0b0b;
   text-decoration: none;
 }
 .btn-lg,
@@ -2366,7 +2359,7 @@ input[type="button"].btn-block {
   transition: height 0.35s ease;
 }
 @font-face {
-  font-family: 'Glyphicons Halflings';
+
   src: url('../bootstrap/fonts/glyphicons-halflings-regular.eot');
   src: url('../bootstrap/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../bootstrap/fonts/glyphicons-halflings-regular.woff') format('woff'), url('../bootstrap/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../bootstrap/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
 }
@@ -2374,7 +2367,7 @@ input[type="button"].btn-block {
   position: relative;
   top: 1px;
   display: inline-block;
-  font-family: 'Glyphicons Halflings';
+
   font-style: normal;
   font-weight: normal;
   line-height: 1;
@@ -3367,9 +3360,9 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   font-size: 14px;
   font-weight: normal;
   line-height: 1;
-  color: #BDBDBD;
+  color: #0f0f0f;
   text-align: center;
-  background-color: #adafae;
+  background-color: #0f0f0f;
   border: 1px solid #282828;
   border-radius: 4px;
 }
@@ -5507,7 +5500,7 @@ button.close {
   height: 20px;
   margin-top: -10px;
   margin-left: -10px;
-  font-family: serif;
+
 }
 .carousel-control .icon-prev:before {
   content: '\2039';

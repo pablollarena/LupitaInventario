@@ -3,24 +3,53 @@
  * Created by PhpStorm.
  * User: PLLARENA
  * Date: 31/10/2016
- * Time: 09:41 AM
+ * Time: 03:02 PM
  */
 include_once ("Class/Usuarios.php");
 session_start();
-$oUser = new Usuarios();
 $sErr = "";
+$oUser = new Usuarios();
 $sNom = "";
-$arrUser = null;
+$sErr2 = "";
+$sRuta = "abcUsuarios.php";
+$bLlave = false;
+$bCampo = false;
+$sOp = "";
+$sMensaje = "";
     if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
         $oUser = $_SESSION['sUser'];
         $sNom = $oUser->getUsuario();
-        $arrUser = $oUser->buscarTodos();
+        $sOp = $_POST['txtOp'];
+
+        if($sOp != 'a'){
+            $oUser->setIdUsuario($_POST['txtUser']);
+            try{
+                $oUser->buscarDatosUsuario();
+            }catch (Exception $e){
+                error_log($e->getFile() . " " . $e->getLine() . " " . $e->getMessage(),0);
+                $sErr2 = "Error en base de datos, comunicarse con el administrador";
+            }
+        }
+
+        if($sOp == 'a'){
+            $bCampo = true;
+            $bLlave = true;
+            $sMensaje = "Agregar";
+        }else if($sOp == 'm'){
+            $bCampo = true;
+            $sMensaje = "Modificar";
+        }else{
+            $sMensaje = "Eliminar";
+        }
+
     }else{
-        $sErr = "Faltan datos de sesión, acceso denegado";
+        $sErr = "Error, faltan datos de sesión";
     }
 
     if($sErr != ""){
         header("Location: error.php?sError=".$sErr);
+    }else if($sErr2 != ""){
+        header("Location: errorProceso.php?sError=".$sErr."&sRuta?=".$sRuta);
     }
 ?>
 <!DOCTYPE html>
@@ -46,9 +75,9 @@ $arrUser = null;
 
     <link href="vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
     <link href="vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
-<link href="vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
-<link href="vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
-<link href="vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+    <link href="vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
 
 </head>
 <body>
@@ -87,41 +116,43 @@ $arrUser = null;
     </nav>
 
     <div id="page-wrapper">
-        <form id="frmusuarios" action="abcUsuarios.php" method="post">
+        <form class="form-horizontal form-label-left" id="frmusuarios" action="abcUsuarios.php" method="post">
             <input type="hidden" name="txtUser">
             <input type="hidden" name="txtOp">
-            <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
-                <thead>
-                <tr>
-                    <th>ID USUARIO</th>
-                    <th>NOMBRE DE USUARIO</th>
-                    <th>ACCIÓN</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php
-                if($arrUser){
-                    foreach ($arrUser as $vRow){
-                        ?>
-                        <tr>
-                            <td><?php echo $vRow->getIdUsuario();?></td>
-                            <td><?php echo $vRow->getUsuario();?></td>
-                            <td>
-                                <input type="submit" value="Modificar" class="btn btn-warning" onClick="txtUser.value=<?php echo $vRow->getIdUsuario();?>; txtOp.value='m';">
-                                <input type="submit" value="Eliminar" class="btn btn-danger" onClick="txtUser.value=<?php echo $vRow->getIdUsuario();?>; txtOp.value='e';">
-                            </td>
-                        </tr>
-                        <?php
-                    }
+            <h2><span class="section">CONTROL DE USUARIOS</span></h2>
+            <?php
+                if($sOp != 'a'){
+                    ?>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="iduser">ID USUARIO <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="iduser" class="form-control col-md-7 col-xs-12" name="iduser" type="text" disabled value="<?php echo $oUser->getIdUsuario();?>">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtUsuario">NOMBRE DE USUARIO <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="txtUsuario" name="txtUsuario"  class="form-control col-md-7 col-xs-12"
+                            value="<?php echo($bLlave == true ? '' : $oUser->getUsuario());?>" <?php echo($sOp == 'm' ? 'required' : '');?> >
+                        </div>
+                    </div>
+            <?php
                 }else{
                     ?>
-                    <td>No se encontraron registros</td>
-                    <?php
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Email <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="email" id="email" name="email" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+            <?php
                 }
-                ?>
-                </tbody>
-            </table>
-            <input type="submit" value="Agregar Usuario" class="btn btn-primary" onClick="txtUser.value='-1';txtOp.value='a'">
+            ?>
+
+            <input type="submit" value="<?php echo $sMensaje;?>" class="btn btn-primary" onClick="txtUser.value='-1';txtOp.value='a'">
         </form>
 
 
@@ -303,5 +334,4 @@ $arrUser = null;
 <!-- /Datatables -->
 </body>
 </html>
-
 

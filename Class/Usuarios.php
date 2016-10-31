@@ -136,4 +136,26 @@ class Usuarios
         return $i;
     }
 
+    function buscarDatosUsuario(){
+        $oAD = new AccesoDatos();
+        $sQuery = "";
+        $bRet = false;
+        $rst = null;
+        if($this->getIdUsuario() == 0){
+            throw new Exception("Error, faltan datos");
+        }else{
+            if($oAD->Conecta()){
+                $sQuery="call buscarDatosUsuario(".$this->getIdUsuario().");";
+                $rst = $oAD->ejecutaQuery($sQuery);
+                $oAD->Desconecta();
+                if($rst){
+                    $this->setIdUsuario($rst[0][0]);
+                    $this->setUsuario($rst[0][1]);
+                    $bRet = true;
+                }
+            }
+        }
+        return $bRet;
+    }
+
 }
