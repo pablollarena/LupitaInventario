@@ -11,10 +11,21 @@ $oUser = new Usuarios();
 $sErr = "";
 $sNom = "";
 $arrUser = null;
+$nFlag = 0;
+$sMsj = "";
     if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
         $oUser = $_SESSION['sUser'];
         $sNom = $oUser->getUsuario();
         $arrUser = $oUser->buscarTodos();
+        $nFlag = $_REQUEST['nFlag'];
+        $sMsj = $_REQUEST['sMsj'];
+
+        if($nFlag != 0 && $sMsj != ""){
+            echo "<script language='JavaScript'> 
+                alert('".$sMsj."'); 
+                </script>";
+        }
+
     }else{
         $sErr = "Faltan datos de sesión, acceso denegado";
     }

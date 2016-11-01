@@ -102,6 +102,18 @@ class Usuarios
         return $bRet;
     }
 
+    function insertar(){
+        $oAD = new AccesoDatos();
+        $sQuery = "";
+        $i = 0;
+        if($oAD->Conecta()){
+            $sQuery = "call insertarUsuarios('".$this->getUsuario()."','".$this->getClave()."');";
+            $i = $oAD->ejecutaComando($sQuery);
+            $oAD->Desconecta();
+        }
+        return $i;
+    }
+
     function eliminar(){
         $oAD = new AccesoDatos();
         $sQuery = "";
@@ -110,7 +122,7 @@ class Usuarios
             throw new Exception("Usuarios->eliminar(): error, faltan datos");
         }else{
             if($oAD->Conecta()){
-                $sQuery = "call eliminarUsuario(".$this->getIdUsuario().");";
+                $sQuery = "call eliminarUsuarios(".$this->getIdUsuario().");";
                 $i = $oAD->ejecutaComando($sQuery);
                 $oAD->Desconecta();
             }
@@ -118,7 +130,7 @@ class Usuarios
         return $i;
     }
 
-    function  update (){
+    function update(){
         $oAD = new  AccesoDatos();
         $sQuery = "";
         $i = 0;
@@ -130,6 +142,22 @@ class Usuarios
             if($oAD -> Conecta()){
                 $sQuery ="call updateUsuario (".$this ->getIdUsuario().",'".$this ->getUsuario()."');";
                 $i=$oAD->ejecutaComando($sQuery);
+                $oAD->Desconecta();
+            }
+        }
+        return $i;
+    }
+
+    function updatePass(){
+        $oAD = new AccesoDatos();
+        $sQuery = "";
+        $i = 0;
+        if($this->getIdUsuario() == 0){
+            throw new Exception("Usuarios->updatePass(): error, faltan datos");
+        }else{
+            if($oAD->Desconecta()){
+                $sQuery = "call updateWithPass(".$this->getIdUsuario().",'".$this->getUsuario()."','".$this->getClave()."');";
+                $i = $oAD->ejecutaComando($sQuery);
                 $oAD->Desconecta();
             }
         }

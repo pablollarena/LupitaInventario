@@ -116,43 +116,57 @@ $sMensaje = "";
     </nav>
 
     <div id="page-wrapper">
-        <form class="form-horizontal form-label-left" id="frmusuarios" action="abcUsuarios.php" method="post">
-            <input type="hidden" name="txtUser">
-            <input type="hidden" name="txtOp">
+        <form class="form-horizontal form-label-left" id="frmusuarios" action="Controladores/accionUsuarios.php" method="post">
+            <input type="hidden" name="txtUser" value="<?php echo($sOp == 'a' ? '' : $oUser->getIdUsuario());?>">
+            <input type="hidden" name="txtOp" value="<?php echo $sOp;?>">
             <h2><span class="section">CONTROL DE USUARIOS</span></h2>
             <?php
                 if($sOp != 'a'){
                     ?>
                     <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="iduser">ID USUARIO <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="iduser">ID USUARIO
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <input id="iduser" class="form-control col-md-7 col-xs-12" name="iduser" type="text" disabled value="<?php echo $oUser->getIdUsuario();?>">
                         </div>
                     </div>
                     <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtUsuario">NOMBRE DE USUARIO <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtNombre">NOMBRE DE USUARIO
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="text" id="txtUsuario" name="txtUsuario"  class="form-control col-md-7 col-xs-12"
-                            value="<?php echo($bLlave == true ? '' : $oUser->getUsuario());?>" <?php echo($sOp == 'm' ? 'required' : '');?> >
+                            <input type="text" id="txtNombre" name="txtNombre"  class="form-control col-md-7 col-xs-12"
+                            value="<?php echo($bLlave == true ? '' : $oUser->getUsuario());?>" <?php echo($sOp == 'm' ? 'required' : '');?> <?php echo($sOp == 'm' ? '' : 'disabled');?> >
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtPass1">PASSWORD (OPCIONAL)
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="password" id="txtPass1" name="txtPass1"  class="form-control col-md-7 col-xs-12" <?php echo ($sOp == 'e' ? 'disabled' : '');?>>
                         </div>
                     </div>
             <?php
                 }else{
                     ?>
                     <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Email <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtNombre">NOMBRE DE USUARIO <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="email" id="email" name="email" required="required" class="form-control col-md-7 col-xs-12">
+                            <input type="text" id="txtNombre" name="txtNombre" required class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtPass">PASSWORD <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="password" id="txtPass" name="txtPass" required class="form-control col-md-7 col-xs-12">
                         </div>
                     </div>
             <?php
                 }
             ?>
 
-            <input type="submit" value="<?php echo $sMensaje;?>" class="btn btn-primary" onClick="txtUser.value='-1';txtOp.value='a'">
+            <input type="submit" value="<?php echo $sMensaje;?>" class="btn btn-primary">
         </form>
 
 

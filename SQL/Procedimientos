@@ -92,6 +92,37 @@ CREATE PROCEDURE buscarCvePass(IN usuario varchar(50), IN pass varchar(100))
   END
 //
 
+DELIMITER //
+CREATE PROCEDURE updateUsuario(IN iduser int(11), IN usuario varchar(30))
+  BEGIN
+    START TRANSACTION;
+    UPDATE usuarios
+    SET sUsuario = usuario
+    WHERE  nIdUsuario = iduser;
+    COMMIT;
+  END
+//
+
+
+DELIMITER //
+CREATE PROCEDURE updateWithPass(IN iduser int(11), IN usuario varchar(30), IN clave varchar(100))
+  BEGIN
+    START TRANSACTION;
+    UPDATE usuarios
+    SET sUsuario = usuario, sClave = sha1(clave)
+    WHERE  nIdUsuario = iduser;
+    COMMIT;
+  END
+//
+
+DELIMITER //
+CREATE PROCEDURE eliminarUsuarios(IN idUsuario int(11))
+  BEGIN
+    START TRANSACTION;
+    DELETE FROM usuarios WHERE nIdUsuario = idUsuario;
+    COMMIT;
+  END
+
 
 INSERT INTO departamento(sDepto) VALUES('TRAFICO');
 
