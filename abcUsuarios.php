@@ -9,6 +9,7 @@ include_once ("Class/Usuarios.php");
 session_start();
 $sErr = "";
 $oUser = new Usuarios();
+$oUsuario = new Usuarios();
 $sNom = "";
 $sErr2 = "";
 $sRuta = "abcUsuarios.php";
@@ -18,13 +19,14 @@ $sOp = "";
 $sMensaje = "";
     if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
         $oUser = $_SESSION['sUser'];
+        $oUser->buscarDatosUsuario();
         $sNom = $oUser->getUsuario();
         $sOp = $_POST['txtOp'];
 
         if($sOp != 'a'){
-            $oUser->setIdUsuario($_POST['txtUser']);
+            $oUsuario->setIdUsuario($_POST['txtUser']);
             try{
-                $oUser->buscarDatosUsuario();
+                $oUsuario->buscarDatosUsuario();
             }catch (Exception $e){
                 error_log($e->getFile() . " " . $e->getLine() . " " . $e->getMessage(),0);
                 //$sErr2 = "Error en base de datos, comunicarse con el administrador";
@@ -117,7 +119,7 @@ $sMensaje = "";
 
     <div id="page-wrapper">
         <form class="form-horizontal form-label-left" id="frmusuarios" action="Controladores/accionUsuarios.php" method="post">
-            <input type="hidden" name="txtUser" value="<?php echo($sOp == 'a' ? '' : $oUser->getIdUsuario());?>">
+            <input type="hidden" name="txtUser" value="<?php echo($sOp == 'a' ? '' : $oUsuario->getIdUsuario());?>">
             <input type="hidden" name="txtOp" value="<?php echo $sOp;?>">
             <h2><span class="section">CONTROL DE USUARIOS</span></h2>
             <?php
@@ -135,7 +137,7 @@ $sMensaje = "";
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <input type="text" id="txtNombre" name="txtNombre"  class="form-control col-md-7 col-xs-12"
-                            value="<?php echo($bLlave == true ? '' : $oUser->getUsuario());?>" <?php echo($sOp == 'm' ? 'required' : '');?> <?php echo($sOp == 'm' ? '' : 'disabled');?> >
+                            value="<?php echo($bLlave == true ? '' : $oUsuario->getUsuario());?>" <?php echo($sOp == 'm' ? 'required' : '');?> <?php echo($sOp == 'm' ? '' : 'disabled');?> >
                         </div>
                     </div>
                     <div class="item form-group">

@@ -17,7 +17,6 @@ $nFlag = 0;
 $sMsj = "";
 $sRuta = "../controlUsuarios.php";
 
-
     if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
         if(isset($_POST['txtOp']) && !empty($_POST['txtOp'])){
             $sOp = $_POST['txtOp'];
@@ -39,20 +38,12 @@ $sRuta = "../controlUsuarios.php";
             try{
                 if($sOp == 'a'){
                     $nAfec = $oUser->insertar();
-                    $sMsj = "Usuario agregado exitosamente";
-                    $nFlag = 1;
                 }else if($sOp == 'm' && !empty($_POST['txtPass1'])){
                     $nAfec = $oUser->updatePass();
-                    $sMsj = "Datos modificados correctamente";
-                    $nFlag = 1;
                 }else if($sOp == 'm' && empty($_POST['txtPass1'])){
                     $nAfec = $oUser->update();
-                    $sMsj = "Datos modificados correctamente";
-                    $nFlag = 1;
                 }else if($sOp == 'e'){
                     $nAfec = $oUser->eliminar();
-                    $sMsj = "Se eliminó exitosamente al usuario";
-                    $nFlag = 1;
                 }
 
                 if($nAfec != 1){
@@ -70,7 +61,7 @@ $sRuta = "../controlUsuarios.php";
     }
 
     if($sErr == ""){
-        header("Location: ../controlUsuarios.php?sMsj=".$sMsj."&nFlag=".$nFlag);
+        header("Location: ../controlUsuarios.php");
     }else{
         header("Location: ../errorProceso.php?sError=".$sErr2."&sRuta=".$sRuta);
     }

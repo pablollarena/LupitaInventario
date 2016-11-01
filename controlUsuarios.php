@@ -5,6 +5,7 @@
  * Date: 31/10/2016
  * Time: 09:41 AM
  */
+error_reporting (0);
 include_once ("Class/Usuarios.php");
 session_start();
 $oUser = new Usuarios();
@@ -15,16 +16,8 @@ $nFlag = 0;
 $sMsj = "";
     if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
         $oUser = $_SESSION['sUser'];
-        $sNom = $oUser->getUsuario();
         $arrUser = $oUser->buscarTodos();
-        $nFlag = $_REQUEST['nFlag'];
-        $sMsj = $_REQUEST['sMsj'];
-
-        if($nFlag != 0 && $sMsj != ""){
-            echo "<script language='JavaScript'> 
-                alert('".$sMsj."'); 
-                </script>";
-        }
+        $sNom = $oUser->getUsuario();
 
     }else{
         $sErr = "Faltan datos de sesión, acceso denegado";

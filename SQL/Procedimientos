@@ -87,7 +87,7 @@ CREATE PROCEDURE insertarSoftware(IN descripcion varchar(100))
 DELIMITER //
 CREATE PROCEDURE buscarCvePass(IN usuario varchar(50), IN pass varchar(100))
   BEGIN
-    SELECT usuarios.sUsuario FROM usuarios
+    SELECT usuarios.nIdUsuario, usuarios.sUsuario FROM usuarios
     WHERE usuarios.sUsuario = usuario AND usuarios.sClave = sha1(pass);
   END
 //

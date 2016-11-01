@@ -94,7 +94,8 @@ class Usuarios
                 $rst = $oAD->ejecutaQuery($sQuery);
                 $oAD->Desconecta();
                 if ($rst) {
-                    $this->setUsuario($rst[0][0]);
+                    $this->setIdUsuario($rst[0][0]);
+                    $this->setUsuario($rst[0][1]);
                     $bRet = true;
                 }
             }
@@ -139,7 +140,7 @@ class Usuarios
             throw new Exception("Usuarios->update(): error no se encontro el dato");
 
         }else{
-            if($oAD -> Conecta()){
+            if($oAD->Conecta()){
                 $sQuery ="call updateUsuario (".$this ->getIdUsuario().",'".$this ->getUsuario()."');";
                 $i=$oAD->ejecutaComando($sQuery);
                 $oAD->Desconecta();
