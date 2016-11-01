@@ -15,11 +15,12 @@ $sOp = "";
 $nAfec = -1;
 $nFlag = 0;
 $sMsj = "";
-$sRuta = "../controlUsuarios.php";
-
+$sRuta = "controlUsuarios.php";
+$sPass = "";
     if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
         if(isset($_POST['txtOp']) && !empty($_POST['txtOp'])){
             $sOp = $_POST['txtOp'];
+            $sPass = $_POST['txtPass1'];
 
             if($sOp == 'm' or $sOp == 'e'){
                 $oUser->setIdUsuario($_POST['txtUser']);
@@ -28,19 +29,19 @@ $sRuta = "../controlUsuarios.php";
             if($sOp == 'a'){
                 $oUser->setUsuario($_POST['txtNombre']);
                 $oUser->setClave($_POST['txtPass']);
-            }else if($sOp == 'm' and !empty($_POST['txtPass1'])){
+            }else if($sOp == 'm' and $sPass != ""){
                 $oUser->setUsuario($_POST['txtNombre']);
-                $oUser->setClave($_POST['txtPass1']);
-            }else if($sOp == 'm' and empty($_POST['txtPass1'])){
+                $oUser->setClave($sPass);
+            }else if($sOp == 'm' and $sPass == ""){
                 $oUser->setUsuario($_POST['txtNombre']);
             }
 
             try{
                 if($sOp == 'a'){
                     $nAfec = $oUser->insertar();
-                }else if($sOp == 'm' && !empty($_POST['txtPass1'])){
+                }else if($sOp == 'm' && $sPass != ""){
                     $nAfec = $oUser->updatePass();
-                }else if($sOp == 'm' && empty($_POST['txtPass1'])){
+                }else if($sOp == 'm' && $sPass == ""){
                     $nAfec = $oUser->update();
                 }else if($sOp == 'e'){
                     $nAfec = $oUser->eliminar();
@@ -51,10 +52,10 @@ $sRuta = "../controlUsuarios.php";
                 }
             }catch (Exception $e){
                 error_log($e->getFile()." ".$e->getLine()." ".$e->getMessage(),0);
-                $sErr = "Error en base de datos, comunicarse con el administrador";
+                $sErr2 = "Error en base de datos, comunicarse con el administrador";
             }
         }else{
-            $sErr = "Faltan datos de la operación";
+            $sErr2 = "Faltan datos de la operación";
         }
     }else{
         $sErr = "Error, faltan datos de sesión";
@@ -62,8 +63,10 @@ $sRuta = "../controlUsuarios.php";
 
     if($sErr == ""){
         header("Location: ../controlUsuarios.php");
-    }else{
+    }else if($sErr2 != ""){
         header("Location: ../errorProceso.php?sError=".$sErr2."&sRuta=".$sRuta);
+    }else if($sErr != ""){
+        header("Location: ../error.php?sError=".$sErr);
     }
 
 
