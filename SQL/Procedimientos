@@ -182,3 +182,19 @@ CREATE PROCEDURE eliminarDepartamento(IN idDepto int(11))
     DELETE FROM departamento WHERE nIdDepto = idDepto;
   END
 //
+
+  DELIMITER //
+  CREATE PROCEDURE updateSoftware(in idSoft int(11), in descrip varchar(30))
+  begin
+  START TRANSACTION;
+  UPDATE software
+  set sDescripcion = descrip where nIdSoftware = idSoft;
+  commit;
+  end
+  //
+   DELIMITER //
+    CREATE PROCEDURE buscarTodosSoftware()
+    BEGIN
+      SELECT software.nIdSoftware,software.sDescripcion from software;
+    END
+    //

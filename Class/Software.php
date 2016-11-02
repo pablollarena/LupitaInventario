@@ -86,15 +86,41 @@ class Software
         return $i;
     }
 
-    function updateAquipos (){
+    function updateSofware (){
         $oAD =new  AccesoDatos();
         $sQuery="";
         $i=0;
 
         if ($this->getIdSoftware() ==0){
+            throw new Exception("Software->updateSoftware(): error no se econtro el dato");
 
+        }else{
+            if ($oAD->Conecta()){
+                $sQuery ="call updateSoftware(".$this->getIdSoftware().",'".$this->getDescripcion()."')";
+                $i=$oAD->ejecutaComando($sQuery);
+                $oAD->Desconecta();
+
+            }
         }
 
+    }
+
+    function eliminarSofware(){
+       $oAD = new AccesoDatos();
+       $sQuery = "";
+       $i = 0;
+        if ($this ->getIdSoftware()==0){
+            throw new Exception("Software->eliminar(): error al encontrar el dato");
+
+        }else{
+            if ($oAD->Conecta()){
+                $sQuery = "call eliminarSoftware (".$this->getIdSoftware().");";
+                $i = $oAD ->ejecutaComando($sQuery);
+                $oAD->Desconecta();
+
+            }
+        }
+        return $i;
     }
 
 }
