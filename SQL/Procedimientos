@@ -149,3 +149,18 @@ CREATE PROCEDURE buscarDatosUsuario(IN usuario int(11))
     SELECT usuarios.nIdUsuario, usuarios.sUsuario FROM usuarios WHERE usuarios.nIdUsuario = usuario;
   END
 //
+  DELIMITER //
+  CREATE PROCEDURE updateSoftware(in idSoft int(11), in descrip varchar(30))
+  begin
+  START TRANSACTION;
+  UPDATE software
+  set sDescripcion = descrip where nIdSoftware = idSoft;
+  commit;
+  end
+  //
+   DELIMITER //
+    CREATE PROCEDURE buscarTodosSoftware()
+    BEGIN
+      SELECT software.nIdSoftware,software.sDescripcion from software;
+    END
+    //
