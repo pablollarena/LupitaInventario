@@ -10,14 +10,20 @@ include_once ("Class/Usuarios.php");
 session_start();
 $oUser = new Usuarios();
 $sErr = "";
+$sErr2 = "";
 $sNom = "";
 $arrUser = null;
 $nFlag = 0;
 $sMsj = "";
     if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
         $oUser = $_SESSION['sUser'];
-        $arrUser = $oUser->buscarTodos();
-        $sNom = $oUser->getUsuario();
+        if($oUser->buscarDatosUsuario()){
+            $arrUser = $oUser->buscarTodos();
+            $sNom = $oUser->getUsuario();
+        }else{
+            $sErr2 = "Usuario no registrado";
+        }
+
 
     }else{
         $sErr = "Faltan datos de sesión, acceso denegado";
@@ -25,6 +31,8 @@ $sMsj = "";
 
     if($sErr != ""){
         header("Location: error.php?sError=".$sErr);
+    }else if($sErr2 != ""){
+        header("Location: logout.php");
     }
 ?>
 <!DOCTYPE html>

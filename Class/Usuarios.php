@@ -156,7 +156,7 @@ class Usuarios
         if($this->getIdUsuario() == 0){
             throw new Exception("Usuarios->updatePass(): error, faltan datos");
         }else{
-            if($oAD->Desconecta()){
+            if($oAD->Conecta()){
                 $sQuery = "call updateWithPass(".$this->getIdUsuario().",'".$this->getUsuario()."','".$this->getClave()."');";
                 $i = $oAD->ejecutaComando($sQuery);
                 $oAD->Desconecta();

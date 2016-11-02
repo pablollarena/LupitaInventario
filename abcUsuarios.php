@@ -19,7 +19,6 @@ $sOp = "";
 $sMensaje = "";
     if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
         $oUser = $_SESSION['sUser'];
-        $oUser->buscarDatosUsuario();
         $sNom = $oUser->getUsuario();
         $sOp = $_POST['txtOp'];
 
@@ -129,7 +128,7 @@ $sMensaje = "";
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="iduser">ID USUARIO
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="iduser" class="form-control col-md-7 col-xs-12" name="iduser" type="text" disabled value="<?php echo $oUser->getIdUsuario();?>">
+                            <input id="iduser" class="form-control col-md-7 col-xs-12" name="iduser" type="text" disabled value="<?php echo $oUsuario->getIdUsuario();?>">
                         </div>
                     </div>
                     <div class="item form-group">
