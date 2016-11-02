@@ -48,7 +48,6 @@ $sRuta = "abcDepto.php";
                 error_log($e->getFile() . " " . $e->getLine() . " " . $e->getMessage(),0);
                 $sErr2 = "Error en base de datos, comunicarse con el administrador";
             }
-            //var_dump($oDepto);
 
         }else{
             $sErr2 = "No se indicó una operación";
