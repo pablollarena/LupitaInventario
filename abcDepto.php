@@ -2,31 +2,33 @@
 /**
  * Created by PhpStorm.
  * User: PLLARENA
- * Date: 31/10/2016
- * Time: 03:02 PM
+ * Date: 02/11/2016
+ * Time: 10:01 AM
  */
 include_once ("Class/Usuarios.php");
+include_once ("Class/Departamento.php");
 session_start();
-$sErr = "";
 $oUser = new Usuarios();
-$oUsuario = new Usuarios();
-$sNom = "";
+$oDepto = new Departamento();
+$sErr = "";
 $sErr2 = "";
-$sRuta = "abcUsuarios.php";
-$bLlave = false;
+$sNom = "";
+$nClave = 0;
+$sRuta = "controlDepto.php";
 $bCampo = false;
-$sOp = "";
+$bLlave = false;
 $sMensaje = "";
     if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
         $oUser = $_SESSION['sUser'];
         $sNom = $oUser->getUsuario();
+        $nClave = $_POST['txtDepto'];
         $sOp = $_POST['txtOp'];
 
         if($sOp != 'a'){
-            $oUsuario->setIdUsuario($_POST['txtUser']);
+            $oDepto->setIdDepto($nClave);
             try{
-                $oUsuario->buscarDatosUsuario();
-            }catch (Exception $e){
+                $oDepto->buscarDatosDepto();
+            }catch(Exception $e){
                 error_log($e->getFile() . " " . $e->getLine() . " " . $e->getMessage(),0);
                 $sErr2 = "Error en base de datos, comunicarse con el administrador";
             }
@@ -50,7 +52,7 @@ $sMensaje = "";
     if($sErr != ""){
         header("Location: error.php?sError=".$sErr);
     }else if($sErr2 != ""){
-        header("Location: errorProceso.php?sError=".$sErr."&sRuta?=".$sRuta);
+        header("Location: errorProceso.php?sError=".$sErr2."&sRuta=".$sRuta);
     }
 ?>
 <!DOCTYPE html>
@@ -117,54 +119,40 @@ $sMensaje = "";
     </nav>
 
     <div id="page-wrapper">
-        <form class="form-horizontal form-label-left" id="frmusuarios" action="Controladores/accionUsuarios.php" method="post">
-            <input type="hidden" name="txtUser" value="<?php echo($sOp == 'a' ? '' : $oUsuario->getIdUsuario());?>">
+        <form class="form-horizontal form-label-left" id="frmusuarios" action="Controladores/accionDepto.php" method="post">
+            <input type="hidden" name="txtDepto" value="<?php echo($sOp == 'a' ? '' : $oDepto->getIdDepto());?>">
             <input type="hidden" name="txtOp" value="<?php echo $sOp;?>">
-            <h2><span class="section">CONTROL DE USUARIOS</span></h2>
+            <h2><span class="section">CONTROL DE DEPARTAMENTOS</span></h2>
             <?php
-                if($sOp != 'a'){
-                    ?>
-                    <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="iduser">ID USUARIO
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="iduser" class="form-control col-md-7 col-xs-12" name="iduser" type="text" disabled value="<?php echo $oUsuario->getIdUsuario();?>">
-                        </div>
+            if($sOp != 'a'){
+                ?>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="iddepto">ID DEL DEPARTAMENTO
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="iddepto" class="form-control col-md-7 col-xs-12" name="iddepto" type="text" disabled value="<?php echo $oDepto->getIdDepto();?>">
                     </div>
-                    <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtNombre">NOMBRE DE USUARIO
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="text" id="txtNombre" name="txtNombre"  class="form-control col-md-7 col-xs-12"
-                            value="<?php echo($bLlave == true ? '' : $oUsuario->getUsuario());?>" <?php echo($sOp == 'm' ? 'required' : '');?> <?php echo($sOp == 'm' ? '' : 'disabled');?> >
-                        </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtNombre">DEPARTAMENTO
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="txtNombre" name="txtNombre"  class="form-control col-md-7 col-xs-12"
+                               value="<?php echo($bLlave == true ? '' : $oDepto->getDepto());?>" <?php echo($sOp == 'm' ? 'required' : '');?> <?php echo($sOp == 'm' ? '' : 'disabled');?> >
                     </div>
-                    <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtPass1">PASSWORD (OPCIONAL)
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="password" id="txtPass1" name="txtPass1"  class="form-control col-md-7 col-xs-12" <?php echo ($sOp == 'e' ? 'disabled' : '');?>>
-                        </div>
+                </div>
+                <?php
+            }else{
+                ?>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtNombre">NOMBRE DEL DEPARTAMENTO <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="txtNombre" name="txtNombre" required class="form-control col-md-7 col-xs-12">
                     </div>
-            <?php
-                }else{
-                    ?>
-                    <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtNombre">NOMBRE DE USUARIO <span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="text" id="txtNombre" name="txtNombre" required class="form-control col-md-7 col-xs-12">
-                        </div>
-                    </div>
-                    <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtPass">PASSWORD <span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="password" id="txtPass" name="txtPass" required class="form-control col-md-7 col-xs-12">
-                        </div>
-                    </div>
-            <?php
-                }
+                </div>
+                <?php
+            }
             ?>
 
             <input type="submit" value="<?php echo $sMensaje;?>" class="btn btn-primary">
@@ -349,4 +337,3 @@ $sMensaje = "";
 <!-- /Datatables -->
 </body>
 </html>
-

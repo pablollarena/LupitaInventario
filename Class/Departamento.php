@@ -61,13 +61,80 @@ class Departamento
                 $oDepto = new Departamento();
                 $oDepto->setIdDepto($vRow[0]);
                 $oDepto->setDepto($vRow[1]);
-                $vOb[$i] = $oDepto;
+                $vObj[$i] = $oDepto;
                 $i = $i + 1;
             }
         }else{
             $vObj = false;
         }
         return $vObj;
+    }
+
+    function buscarDatosDepto(){
+        $oAD = new AccesoDatos();
+        $sQuery = "";
+        $rst = null;
+        $bRet = false;
+        if($this->getIdDepto() == 0){
+            throw new Exception("Departamento->buscarDatosDepto: error, faltan datos");
+        }else{
+            if($oAD->Conecta()){
+                $sQuery = "call buscarDatosDepto(".$this->getIdDepto().");";
+                $rst = $oAD->ejecutaQuery($sQuery);
+                $oAD->Desconecta();
+                if($rst){
+                    $this->setIdDepto($rst[0][0]);
+                    $this->setDepto($rst[0][1]);
+                    $bRet = true;
+                }
+            }
+        }
+        return $bRet;
+    }
+
+    function insertar(){
+        $oAD = new AccesoDatos();
+        $sQuery = "";
+        $i = -1;
+        if($oAD->Conecta()){
+            $sQuery = "call insertarDepartamento('".$this->getDepto()."');";
+            $i = $oAD->ejecutaComando($sQuery);
+            //var_dump($sQuery);
+            $oAD->Desconecta();
+        }
+        return $i;
+    }
+
+    function modificar(){
+        $oAD = new AccesoDatos();
+        $sQuery = "";
+        $i = -1;
+        if($this->getIdDepto() == 0){
+            throw new Exception("Departamento->modificar(): error, faltan datos");
+        }else{
+            if($oAD->Conecta()){
+                $sQuery = "call updateDepartamento(".$this->getIdDepto().",'".$this->getDepto()."');";
+                $i = $oAD->ejecutaComando($sQuery);
+                $oAD->Desconecta();
+            }
+        }
+        return $i;
+    }
+
+    function eliminar(){
+        $oAD = new AccesoDatos();
+        $sQuery = "";
+        $i = 0;
+        if($this->getIdDepto() == 0){
+            throw new Exception("Departamento->eliminar(): error, faltan datos");
+        }else{
+            if($oAD->Conecta()){
+                $sQuery = "call eliminarDepartamento(".$this->getIdDepto().");";
+                $i = $oAD->ejecutaComando($sQuery);
+                $oAD->Desconecta();
+            }
+        }
+        return $i;
     }
 
 

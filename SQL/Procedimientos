@@ -149,3 +149,36 @@ CREATE PROCEDURE buscarDatosUsuario(IN usuario int(11))
     SELECT usuarios.nIdUsuario, usuarios.sUsuario FROM usuarios WHERE usuarios.nIdUsuario = usuario;
   END
 //
+
+DELIMITER //
+CREATE PROCEDURE buscarTodosDepto()
+  BEGIN
+    SELECT departamento.nIdDepto, departamento.sDepto FROM departamento;
+  END
+//
+
+DELIMITER //
+CREATE PROCEDURE buscarDatosDepto(IN idDepto int(11))
+  BEGIN
+    SELECT departamento.nIdDepto, departamento.sDepto FROM departamento
+    WHERE departamento.nIdDepto = idDepto;
+  END
+//
+
+DELIMITER //
+CREATE PROCEDURE updateDepartamento(IN idDepto int(11), IN depto varchar(100))
+  BEGIN
+    START TRANSACTION;
+    UPDATE departamento
+    SET sDepto = depto
+    WHERE nIdDepto = idDepto;
+    COMMIT;
+  END
+//
+
+DELIMITER //
+CREATE PROCEDURE eliminarDepartamento(IN idDepto int(11))
+  BEGIN
+    DELETE FROM departamento WHERE nIdDepto = idDepto;
+  END
+//

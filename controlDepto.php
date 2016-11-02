@@ -2,56 +2,36 @@
 /**
  * Created by PhpStorm.
  * User: PLLARENA
- * Date: 31/10/2016
- * Time: 03:02 PM
+ * Date: 01/11/2016
+ * Time: 05:19 PM
  */
 include_once ("Class/Usuarios.php");
+include_once ("Class/Departamento.php");
 session_start();
-$sErr = "";
 $oUser = new Usuarios();
-$oUsuario = new Usuarios();
-$sNom = "";
+$oDepto = new Departamento();
+$sErr = "";
 $sErr2 = "";
-$sRuta = "abcUsuarios.php";
-$bLlave = false;
-$bCampo = false;
-$sOp = "";
-$sMensaje = "";
+$sNom = "";
+$arrDepto = null;
+
     if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
         $oUser = $_SESSION['sUser'];
-        $sNom = $oUser->getUsuario();
-        $sOp = $_POST['txtOp'];
-
-        if($sOp != 'a'){
-            $oUsuario->setIdUsuario($_POST['txtUser']);
-            try{
-                $oUsuario->buscarDatosUsuario();
-            }catch (Exception $e){
-                error_log($e->getFile() . " " . $e->getLine() . " " . $e->getMessage(),0);
-                $sErr2 = "Error en base de datos, comunicarse con el administrador";
-            }
-        }
-
-        if($sOp == 'a'){
-            $bCampo = true;
-            $bLlave = true;
-            $sMensaje = "Agregar";
-        }else if($sOp == 'm'){
-            $bCampo = true;
-            $sMensaje = "Modificar";
+        if($oUser->buscarDatosUsuario()){
+            $sNom = $oUser->getUsuario();
+            $arrDepto = $oDepto->buscarTodos();
         }else{
-            $sMensaje = "Eliminar";
+            $sErr2 = "Usuario no registrado";
         }
 
     }else{
-        $sErr = "Error, faltan datos de sesión";
+        $sErr = "Faltan datos de sesión";
     }
 
     if($sErr != ""){
         header("Location: error.php?sError=".$sErr);
-    }else if($sErr2 != ""){
-        header("Location: errorProceso.php?sError=".$sErr."&sRuta?=".$sRuta);
-    }
+
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -117,57 +97,41 @@ $sMensaje = "";
     </nav>
 
     <div id="page-wrapper">
-        <form class="form-horizontal form-label-left" id="frmusuarios" action="Controladores/accionUsuarios.php" method="post">
-            <input type="hidden" name="txtUser" value="<?php echo($sOp == 'a' ? '' : $oUsuario->getIdUsuario());?>">
-            <input type="hidden" name="txtOp" value="<?php echo $sOp;?>">
-            <h2><span class="section">CONTROL DE USUARIOS</span></h2>
-            <?php
-                if($sOp != 'a'){
-                    ?>
-                    <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="iduser">ID USUARIO
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="iduser" class="form-control col-md-7 col-xs-12" name="iduser" type="text" disabled value="<?php echo $oUsuario->getIdUsuario();?>">
-                        </div>
-                    </div>
-                    <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtNombre">NOMBRE DE USUARIO
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="text" id="txtNombre" name="txtNombre"  class="form-control col-md-7 col-xs-12"
-                            value="<?php echo($bLlave == true ? '' : $oUsuario->getUsuario());?>" <?php echo($sOp == 'm' ? 'required' : '');?> <?php echo($sOp == 'm' ? '' : 'disabled');?> >
-                        </div>
-                    </div>
-                    <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtPass1">PASSWORD (OPCIONAL)
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="password" id="txtPass1" name="txtPass1"  class="form-control col-md-7 col-xs-12" <?php echo ($sOp == 'e' ? 'disabled' : '');?>>
-                        </div>
-                    </div>
-            <?php
+        <form id="frmusuarios" action="abcDepto.php" method="post">
+            <input type="hidden" name="txtDepto">
+            <input type="hidden" name="txtOp">
+            <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    <th>ID DEPARTAMENTO</th>
+                    <th>NOMBRE</th>
+                    <th>ACCIÓN</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                if($arrDepto){
+                    foreach ($arrDepto as $vRow){
+                        ?>
+                        <tr>
+                            <td><?php echo $vRow->getIdDepto();?></td>
+                            <td><?php echo $vRow->getDepto();?></td>
+                            <td>
+                                <input type="submit" value="Modificar" class="btn btn-warning" onClick="txtDepto.value=<?php echo $vRow->getIdDepto();?>; txtOp.value='m';">
+                                <input type="submit" value="Eliminar" class="btn btn-danger" onClick="txtDepto.value=<?php echo $vRow->getIdDepto();?>; txtOp.value='e';">
+                            </td>
+                        </tr>
+                        <?php
+                    }
                 }else{
                     ?>
-                    <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtNombre">NOMBRE DE USUARIO <span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="text" id="txtNombre" name="txtNombre" required class="form-control col-md-7 col-xs-12">
-                        </div>
-                    </div>
-                    <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtPass">PASSWORD <span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="password" id="txtPass" name="txtPass" required class="form-control col-md-7 col-xs-12">
-                        </div>
-                    </div>
-            <?php
+                    <td>No se encontraron registros</td>
+                    <?php
                 }
-            ?>
-
-            <input type="submit" value="<?php echo $sMensaje;?>" class="btn btn-primary">
+                ?>
+                </tbody>
+            </table>
+            <input type="submit" value="Agregar Departamento" class="btn btn-primary" onClick="txtDepto.value='-1';txtOp.value='a'">
         </form>
 
 
@@ -349,4 +313,5 @@ $sMensaje = "";
 <!-- /Datatables -->
 </body>
 </html>
+
 
