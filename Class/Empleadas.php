@@ -8,12 +8,16 @@
  */
 require_once ("AccesoDatos.php");
 include_once ("Departamento.php");
+include_once ("Empleadas.php");
 class Empleadas
 {
     private $oAD = null;
     private $nIdEmpleada = 0;
     private $sNombre = "";
     private $oDepto = null;
+    private $oSucursal = null;
+
+
 
     public function getAD()
     {
@@ -53,6 +57,16 @@ class Empleadas
     public function setDepto($oDepto)
     {
         $this->oDepto = $oDepto;
+    }
+
+    public function getSucursal()
+    {
+        return $this->oSucursal;
+    }
+
+    public function setSucursal($oSucursal)
+    {
+        $this->oSucursal = $oSucursal;
     }
 
     function buscarTodos(){

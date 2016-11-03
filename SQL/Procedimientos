@@ -220,3 +220,47 @@ CREATE PROCEDURE buscarDatosEmpleado(IN idEmpleado int(11))
     WHERE empleadas.nIdEmpleado = idEmpleado;
   END
 //
+
+DELIMITER //
+CREATE PROCEDURE buscarTodosSucursales()
+  BEGIN
+    SELECT sucursales.nIdSucursal, sucursales.sNombre FROM sucursales;
+  END
+//
+
+DELIMITER //
+CREATE PROCEDURE buscarDatosSucursales(IN idSucursal int(11))
+  BEGIN
+    SELECT sucursales.nIdSucursal, sucursales.sNombre FROM sucursales
+    WHERE sucursales.nIdSucursal = idSucursal;
+  END
+//
+
+DELIMITER //
+CREATE PROCEDURE insertarSucursal(IN nombre varchar(200))
+  BEGIN
+    START TRANSACTION;
+    INSERT INTO sucursales(sNombre) VALUES(nombre);
+    COMMIT;
+  END
+//
+
+DELIMITER //
+CREATE PROCEDURE updateSucursal(IN idSucursal int(11), IN nombre varchar(200))
+  BEGIN
+    START TRANSACTION;
+    UPDATE sucursales
+    SET sNombre = nombre
+    WHERE nIdSucursal = idSucursal;
+    COMMIT;
+  END
+//
+
+DELIMITER //
+CREATE PROCEDURE eliminarSucursal(IN idSucursal int(11))
+  BEGIN
+    START TRANSACTION;
+    DELETE FROM sucursales WHERE nIdSucursal = idSucursal;
+    COMMIT;
+  END
+//
