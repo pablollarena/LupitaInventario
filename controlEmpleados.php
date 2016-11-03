@@ -3,50 +3,30 @@
  * Created by PhpStorm.
  * User: PLLARENA
  * Date: 02/11/2016
- * Time: 10:01 AM
+ * Time: 12:25 PM
  */
+require_once ("Class/Empleadas.php");
 include_once ("Class/Usuarios.php");
-include_once ("Class/Departamento.php");
 session_start();
+$oEmpleados = new Empleadas();
 $oUser = new Usuarios();
-$oDepto = new Departamento();
 $sErr = "";
-$sErr2 = "";
 $sNom = "";
-$nClave = 0;
-$sRuta = "controlDepto.php";
-$bCampo = false;
-$bLlave = false;
-$sMensaje = "";
+$arrEmp = null;
+$sErr2 = "";
+$sRuta = "controlEmpleados.php";
+
     if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
         $oUser = $_SESSION['sUser'];
-        $sNom = $oUser->getUsuario();
-        $nClave = $_POST['txtDepto'];
-        $sOp = $_POST['txtOp'];
-
-        if($sOp != 'a'){
-            $oDepto->setIdDepto($nClave);
-            try{
-                $oDepto->buscarDatosDepto();
-            }catch(Exception $e){
-                error_log($e->getFile() . " " . $e->getLine() . " " . $e->getMessage(),0);
-                $sErr2 = "Error en base de datos, comunicarse con el administrador";
-            }
-        }
-
-        if($sOp == 'a'){
-            $bCampo = true;
-            $bLlave = true;
-            $sMensaje = "Agregar";
-        }else if($sOp == 'm'){
-            $bCampo = true;
-            $sMensaje = "Modificar";
+        if($oUser->buscarDatosUsuario()){
+            $sNom = $oUser->getUsuario();
+            $arrEmp = $oEmpleados->buscarTodos();
         }else{
-            $sMensaje = "Eliminar";
+            $sErr2 = "Usuario no registrado";
         }
 
     }else{
-        $sErr = "Error, faltan datos de sesión";
+        $sErr = "Faltan datos de sesión";
     }
 
     if($sErr != ""){
@@ -119,43 +99,43 @@ $sMensaje = "";
     </nav>
 
     <div id="page-wrapper">
-        <form class="form-horizontal form-label-left" id="frmusuarios" action="Controladores/accionDepto.php" method="post">
-            <input type="hidden" name="txtDepto" value="<?php echo($sOp == 'a' ? '' : $oDepto->getIdDepto());?>">
-            <input type="hidden" name="txtOp" value="<?php echo $sOp;?>">
-            <h2><span class="section">CONTROL DE DEPARTAMENTOS</span></h2>
-            <?php
-            if($sOp != 'a'){
-                ?>
-                <div class="item form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="iddepto">ID DEL DEPARTAMENTO
-                    </label>
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="iddepto" class="form-control col-md-7 col-xs-12" name="iddepto" type="text" disabled value="<?php echo $oDepto->getIdDepto();?>">
-                    </div>
-                </div>
-                <div class="item form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtNombre">DEPARTAMENTO
-                    </label>
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input type="text" id="txtNombre" name="txtNombre"  class="form-control col-md-7 col-xs-12"
-                               value="<?php echo($bLlave == true ? '' : $oDepto->getDepto());?>" <?php echo($sOp == 'm' ? 'required' : '');?> <?php echo($sOp == 'm' ? '' : 'disabled');?> >
-                    </div>
-                </div>
+        <form id="frmEmpleados" action="abcEmpleados.php" method="post">
+            <input type="hidden" name="txtClave">
+            <input type="hidden" name="txtOp">
+            <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    <th>ID EMPLEADO</th>
+                    <th>NOMBRE</th>
+                    <th>DEPARTAMENTO</th>
+                    <th>ACCIÓN</th>
+                </tr>
+                </thead>
+                <tbody>
                 <?php
-            }else{
+                if($arrEmp){
+                    foreach ($arrEmp as $vRow){
+                        ?>
+                        <tr>
+                            <td><?php echo $vRow->getIdEmpleada();?></td>
+                            <td><?php echo $vRow->getNombre();?></td>
+                            <td><?php echo $vRow->getDepto()->getDepto();?></td>
+                            <td>
+                                <input type="submit" value="Modificar" class="btn btn-warning" onClick="txtClave.value=<?php echo $vRow->getIdEmpleada();?>; txtOp.value='m';">
+                                <input type="submit" value="Eliminar" class="btn btn-danger" onClick="txtClave.value=<?php echo $vRow->getIdEmpleada();?>; txtOp.value='e';">
+                            </td>
+                        </tr>
+                        <?php
+                    }
+                }else{
+                    ?>
+                    <td>No se encontraron registros</td>
+                    <?php
+                }
                 ?>
-                <div class="item form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtNombre">NOMBRE DEL DEPARTAMENTO <span class="required">*</span>
-                    </label>
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input type="text" id="txtNombre" name="txtNombre" required class="form-control col-md-7 col-xs-12">
-                    </div>
-                </div>
-                <?php
-            }
-            ?>
-
-            <input type="submit" value="<?php echo $sMensaje;?>" class="btn btn-primary">
+                </tbody>
+            </table>
+            <input type="submit" value="Agregar Departamento" class="btn btn-primary" onClick="txtClave.value='-1';txtOp.value='a'">
         </form>
 
 
@@ -337,3 +317,6 @@ $sMensaje = "";
 <!-- /Datatables -->
 </body>
 </html>
+
+
+

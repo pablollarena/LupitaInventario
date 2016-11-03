@@ -192,9 +192,31 @@ CREATE PROCEDURE eliminarDepartamento(IN idDepto int(11))
   commit;
   end
   //
+
    DELIMITER //
     CREATE PROCEDURE buscarTodosSoftware()
     BEGIN
       SELECT software.nIdSoftware,software.sDescripcion from software;
     END
     //
+
+DELIMITER //
+CREATE PROCEDURE buscarTodosEmpleados()
+  BEGIN
+    SELECT empleadas.nIdEmpleado, empleadas.sNombre, departamento.sDepto
+    FROM empleadas
+      LEFT OUTER JOIN departamento
+        ON departamento.nIdDepto = empleadas.nIdDepto;
+  END
+//
+
+DELIMITER //
+CREATE PROCEDURE buscarDatosEmpleado(IN idEmpleado int(11))
+  BEGIN
+    SELECT empleadas.nIdEmpleado, empleadas.sNombre, departamento.sDepto
+    FROM empleadas
+      LEFT OUTER JOIN departamento
+        ON departamento.nIdDepto = empleadas.nIdDepto
+    WHERE empleadas.nIdEmpleado = idEmpleado;
+  END
+//

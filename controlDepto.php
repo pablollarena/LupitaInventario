@@ -14,6 +14,7 @@ $sErr = "";
 $sErr2 = "";
 $sNom = "";
 $arrDepto = null;
+$sRuta = "controlDepto.php";
 
     if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
         $oUser = $_SESSION['sUser'];
@@ -28,10 +29,11 @@ $arrDepto = null;
         $sErr = "Faltan datos de sesión";
     }
 
-    if($sErr != ""){
+    if($sErr != "") {
         header("Location: error.php?sError=".$sErr);
-
-}
+    }else if($sErr2 != ""){
+        header("Location: errorProceso.php?sError=".$sErr2."&sRuta=".$sRuta);
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -81,7 +83,7 @@ $arrDepto = null;
                 <li><a href="controlDepto.php"><i class="fa fa-archive"></i> Departamentos</a></li>
                 <li><a href="register.html"><i class="fa fa-file-pdf-o"></i> Reportes</a></li>
                 <li><a href="controlSoftware.php"><i class="fa fa-terminal"></i> Software</a></li>
-                <li><a href="forms.html"><i class="fa fa-book"></i> Empleados</a></li>
+                <li><a href="controlEmpleados.php"><i class="fa fa-book"></i> Empleados</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right navbar-user">
                 <li class="dropdown user-dropdown">
