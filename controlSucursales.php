@@ -2,65 +2,31 @@
 /**
  * Created by PhpStorm.
  * User: PLLARENA
- * Date: 02/11/2016
- * Time: 01:21 PM
+ * Date: 04/11/2016
+ * Time: 02:36 PM
  */
 include_once ("Class/Usuarios.php");
-include_once ("Class/Empleadas.php");
-include_once ("Class/Departamento.php");
+include_once ("Class/Sucursales.php");
 session_start();
 $oUser = new Usuarios();
-$oDepto = new Departamento();
-$oEmpleado = new Empleadas();
+$oSucursal = new Sucursales();
 $sErr = "";
-$sErr2 = "";
-$arrDepto = null;
 $sNom = "";
-$bCampo = false;
-$bLlave = false;
-$sMensaje = "";
-$sRuta = "controlEmpleados.php";
-
+$arrSuc = null;
     if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
-        if(isset($_POST['txtOp']) && !empty($_POST['txtOp'])){
-            $oUser = $_SESSION['sUser'];
+        $oUser = $_SESSION['sUser'];
+        if($oUser->buscarDatosUsuario()){
             $sNom = $oUser->getUsuario();
-            $sOp = $_POST['txtOp'];
-
-            if($sOp != 'a'){
-                $oEmpleado->setIdEmpleada($_POST['txtClave']);
-                try{
-                    $oEmpleado->buscarDatosEmpleados();
-                }catch (Exception $e){
-                    error_log($e->getFile() . " " . $e->getLine() . " " . $e->getMessage(),0);
-                    $sErr2 = "Error en base de datos, comunicarse con el administrador";
-                }
-            }
-
-            if($sOp == 'a'){
-                $bCampo = true;
-                $bLlave = true;
-                $arrDepto = $oDepto->buscarTodos();
-                $sMensaje = "Agregar";
-            }else if($sOp == 'm'){
-                $bCampo = true;
-                $arrDepto = $oDepto->buscarTodos();
-                $sMensaje = "Modificar";
-            }else if($sOp == 'e'){
-                $sMensaje = "Eliminar";
-            }
-
+            $arrSuc = $oSucursal->buscarTodos();
         }else{
-            $sErr2 = "Error, no se indicó ninguna operación";
+            $sErr = "El usuario no está registrado";
         }
     }else{
         $sErr = "Faltan datos de sesión, acceso denegado";
     }
 
     if($sErr != ""){
-        header("Location; error.php?sError=".$sErr);
-    }else if($sErr2 != ""){
-        //header("Location: errorProceso.php?sError=".$sErr2."&sRuta=".$sRuta);
+        header("Location: error.php?sError=".$sErr);
     }
 ?>
 <!DOCTYPE html>
@@ -110,10 +76,8 @@ $sRuta = "controlEmpleados.php";
                 <li><a href="blog.html"><i class="fa fa-desktop"></i> Equipos</a></li>
                 <li><a href="controlDepto.php"><i class="fa fa-archive"></i> Departamentos</a></li>
                 <li><a href="register.html"><i class="fa fa-file-pdf-o"></i> Reportes</a></li>
-                <li><a href="controlSoftware.php"><i class="fa fa-terminal"></i> Software</a></li>
+                <li><a href="timeline.html"><i class="fa fa-terminal"></i> Software</a></li>
                 <li><a href="controlEmpleados.php"><i class="fa fa-book"></i> Empleados</a></li>
-                <li><a href="controlSucursales.php"><i class="fa fa-book"></i> Sucursales</a></li>
-                <li><a href="inventario.php"><i class="fa fa-book"></i> Control de Inventario</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right navbar-user">
                 <li class="dropdown user-dropdown">
@@ -129,111 +93,41 @@ $sRuta = "controlEmpleados.php";
     </nav>
 
     <div id="page-wrapper">
-        <form class="form-horizontal form-label-left" id="frmusuarios" action="Controladores/accionEmpleados.php" method="post">
-            <input type="hidden" name="txtEmp" value="<?php echo($sOp == 'a' ? '' : $oEmpleado->getIdEmpleada());?>">
-            <input type="hidden" name="txtOp" value="<?php echo $sOp;?>">
-            <h2><span class="section">CONTROL DE EMPLEADOS</span></h2>
-            <?php
-                if($sOp == 'a'){
+        <form id="frmusuarios" action="abcUsuarios.php" method="post">
+            <input type="hidden" name="txtUser">
+            <input type="hidden" name="txtOp">
+            <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    <th>ID SUCURSAL</th>
+                    <th>NOMBRE</th>
+                    <th>ACCIÓN</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                if($arrSuc){
+                    foreach ($arrSuc as $vRow){
+                        ?>
+                        <tr>
+                            <td><?php echo $vRow->getIdSucursal();?></td>
+                            <td><?php echo $vRow->getNombre();?></td>
+                            <td>
+                                <input type="submit" value="Modificar" class="btn btn-warning" onClick="txtUser.value=<?php echo $vRow->getIdSucursal();?>; txtOp.value='m';">
+                                <input type="submit" value="Eliminar" class="btn btn-danger" onClick="txtUser.value=<?php echo $vRow->getIdSucursal();?>; txtOp.value='e';">
+                            </td>
+                        </tr>
+                        <?php
+                    }
+                }else{
                     ?>
-                    <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtNomEmp">NOMBRE DEL EMPLEADO(A)
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="txtNomEmp" class="form-control col-md-7 col-xs-12" name="txtNomEmp" type="text">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="depto">DEPARTAMENTO EN QUE LABORA <span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <select id="depto" name="depto" class="form-control" required>
-                                <option value="">Seleccione</option>
-                                <?php
-                                if($arrDepto != null){
-                                    foreach($arrDepto as $vRow){
-                                        ?>
-                                        <option value="<?php echo $vRow->getIdDepto();?>"><?php echo $vRow->getDepto();?></option>
-                                        <?php
-                                    }
-                                }
-                                ?>
-
-                            </select>
-                        </div>
-                    </div>
-            <?php
-                }else if($sOp == 'm'){
-                    ?>
-                    <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtIdEmp">ID DEL EMPLEADO(A)
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="txtIdEmp" class="form-control col-md-7 col-xs-12" name="txtIdEmp" type="text" disabled value="<?php echo $oEmpleado->getIdEmpleada();?>">
-                        </div>
-                    </div>
-                    <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtNomEmp">NOMBRE
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="txtNomEmp" class="form-control col-md-7 col-xs-12" name="txtNomEmp" type="text" <?php echo ($bCampo == true ? '': 'disabled');?> value="<?php echo $oEmpleado->getNombre();?>">
-                        </div>
-                    </div>
-                    <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtDeptoActual">DEPTO ACTUAL
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="txtDeptoActual" class="form-control col-md-7 col-xs-12" name="txtDeptoActual" type="text" disabled value="<?php echo $oEmpleado->getDepto()->getDepto();?>">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="depto2">ASIGNAR NUEVO DEPARTAMENTO(OPCIONAL)
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <select id="depto2" name="depto2" class="form-control" required>
-                                <option value="">Seleccione</option>
-                                <?php
-                                if($arrDepto != null){
-                                    foreach($arrDepto as $vRow){
-                                        ?>
-                                        <option value="<?php echo $vRow->getIdDepto();?>"><?php echo $vRow->getDepto();?></option>
-                                        <?php
-                                    }
-                                }
-                                ?>
-
-                            </select>
-                        </div>
-                    </div>
-            <?php
-                }else if($sOp == 'e'){
-                    ?>
-                    <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtIdEmp">ID DEL EMPLEADO(A)
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="txtIdEmp" class="form-control col-md-7 col-xs-12" name="txtIdEmp" type="text" disabled value="<?php echo $oEmpleado->getIdEmpleada();?>">
-                        </div>
-                    </div>
-                    <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtNomEmp">NOMBRE
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="txtNomEmp" class="form-control col-md-7 col-xs-12" name="txtNomEmp" type="text" <?php echo ($bCampo == true ? '': 'disabled');?> value="<?php echo $oEmpleado->getNombre();?>">
-                        </div>
-                    </div>
-                    <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtDeptoActual">DEPTO ACTUAL
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="txtDeptoActual" class="form-control col-md-7 col-xs-12" name="txtDeptoActual" type="text" disabled value="<?php echo $oEmpleado->getDepto()->getDepto();?>">
-                        </div>
-                    </div>
-            <?php
+                    <td>No se encontraron registros</td>
+                    <?php
                 }
-            ?>
-
-            <input type="submit" value="<?php echo $sMensaje;?>" class="btn btn-primary">
+                ?>
+                </tbody>
+            </table>
+            <input type="submit" value="Agregar Usuario" class="btn btn-primary" onClick="txtUser.value='-1';txtOp.value='a'">
         </form>
 
 
@@ -415,3 +309,4 @@ $sRuta = "controlEmpleados.php";
 <!-- /Datatables -->
 </body>
 </html>
+

@@ -54,8 +54,7 @@ CREATE TABLE usuarios (
 );
 
 ALTER TABLE empleadas
-ADD COLUMN nIdSucursal INT(11) NOT NULL AFTER nIdDepto,
-ADD INDEX fk_empleadas_Sucursales1_idx (nIdSucursal ASC);
+ADD COLUMN nIdSucursal INT(11) NOT NULL AFTER nIdDepto;
 
 CREATE TABLE IF NOT EXISTS Sucursales (
   nIdSucursal INT(11) NOT NULL,
