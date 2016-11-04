@@ -84,6 +84,8 @@ $sRuta = "controlDepto.php";
                 <li><a href="register.html"><i class="fa fa-file-pdf-o"></i> Reportes</a></li>
                 <li><a href="controlSoftware.php"><i class="fa fa-terminal"></i> Software</a></li>
                 <li><a href="controlEmpleados.php"><i class="fa fa-book"></i> Empleados</a></li>
+                <li><a href="controlSucursales.php"><i class="fa fa-book"></i> Sucursales</a></li>
+                <li><a href="inventario.php"><i class="fa fa-book"></i> Control de Inventario</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right navbar-user">
                 <li class="dropdown user-dropdown">

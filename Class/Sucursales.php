@@ -52,15 +52,15 @@ class Sucursales
         $i = 0;
         $oSuc = null;
         if($oAD->Conecta()){
-            $sQuery = "call buscarTodosSucursal();";
+            $sQuery = "call buscarTodosSucursales();";
             $rst = $oAD->ejecutaQuery($sQuery);
             $oAD->Desconecta();
         }
         if($rst){
             foreach ($rst as $vRow){
                 $oSuc = new Sucursales();
-                $oSuc->setIdSucursal($rst[0]);
-                $oSuc->setNombre($rst[1]);
+                $oSuc->setIdSucursal($vRow[0]);
+                $oSuc->setNombre($vRow[1]);
                 $vObj[$i] = $oSuc;
                 $i = $i + 1;
             }
