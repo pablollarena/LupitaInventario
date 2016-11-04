@@ -1,38 +1,57 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: PLLARENA
+ * User: SISTEMAS
  * Date: 02/11/2016
- * Time: 12:25 PM
+ * Time: 02:09 PM
  */
-require_once ("Class/Empleadas.php");
-include_once ("Class/Usuarios.php");
-session_start();
-$oEmpleados = new Empleadas();
-$oUser = new Usuarios();
-$sErr = "";
-$sNom = "";
-$arrEmp = null;
-$sErr2 = "";
-$sRuta = "controlEmpleados.php";
 
+include_once ("Class/Software.php");
+session_start();
+$sErr = "";
+$oSoft = new Software();
+$oSoftware = new Software();
+$sNom = "";
+$sErr2 = "";
+$sRuta = "abcSoftware.php";
+$bLlave = false;
+$bCampo = false;
+$sOp = "";
+$sMensaje = "";
     if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
         $oUser = $_SESSION['sUser'];
-        if($oUser->buscarDatosUsuario()){
-            $sNom = $oUser->getUsuario();
-            $arrEmp = $oEmpleados->buscarTodos();
+        $sNom = $oUser->getUsuario();
+        $sOp = $_POST['txtOp'];
+
+        if($sOp != 'a'){
+            $oUsuario->setIdUsuario($_POST['txtUser']);
+            try{
+                $oUsuario->buscarDatosUsuario();
+            }catch (Exception $e){
+                error_log($e->getFile() . " " . $e->getLine() . " " . $e->getMessage(),0);
+                //$sErr2 = "Error en base de datos, comunicarse con el administrador";
+            }
+        }
+
+        if($sOp == 'a'){
+            $bCampo = true;
+            $bLlave = true;
+            $sMensaje = "Agregar";
+        }else if($sOp == 'm'){
+            $bCampo = true;
+            $sMensaje = "Modificar";
         }else{
-            $sErr2 = "Usuario no registrado";
+            $sMensaje = "Eliminar";
         }
 
     }else{
-        $sErr = "Faltan datos de sesión";
+        $sErr = "Error, faltan datos de sesión";
     }
 
     if($sErr != ""){
         header("Location: error.php?sError=".$sErr);
     }else if($sErr2 != ""){
-        header("Location: errorProceso.php?sError=".$sErr2."&sRuta=".$sRuta);
+        header("Location: errorProceso.php?sError=".$sErr."&sRuta?=".$sRuta);
     }
 ?>
 <!DOCTYPE html>
@@ -80,10 +99,10 @@ $sRuta = "controlEmpleados.php";
                 <li class="selected"><a href="panelAdmin.php"><i class="fa fa-bullseye"></i> Principal</a></li>
                 <li><a href="controlUsuarios.php"><i class="fa fa-child"></i> Usuarios</a></li>
                 <li><a href="blog.html"><i class="fa fa-desktop"></i> Equipos</a></li>
-                <li><a href="controlDepto.php"><i class="fa fa-archive"></i> Departamentos</a></li>
+                <li><a href="index.html"><i class="fa fa-archive"></i> Departamentos</a></li>
                 <li><a href="register.html"><i class="fa fa-file-pdf-o"></i> Reportes</a></li>
                 <li><a href="controlSoftware.php"><i class="fa fa-terminal"></i> Software</a></li>
-                <li><a href="controlEmpleados.php"><i class="fa fa-book"></i> Empleados</a></li>
+                <li><a href="forms.html"><i class="fa fa-book"></i> Empleados</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right navbar-user">
                 <li class="dropdown user-dropdown">
@@ -99,43 +118,57 @@ $sRuta = "controlEmpleados.php";
     </nav>
 
     <div id="page-wrapper">
-        <form id="frmEmpleados" action="abcEmpleados.php" method="post">
-            <input type="hidden" name="txtClave">
-            <input type="hidden" name="txtOp">
-            <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
-                <thead>
-                <tr>
-                    <th>ID EMPLEADO</th>
-                    <th>NOMBRE</th>
-                    <th>DEPARTAMENTO</th>
-                    <th>ACCIÓN</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php
-                if($arrEmp){
-                    foreach ($arrEmp as $vRow){
-                        ?>
-                        <tr>
-                            <td><?php echo $vRow->getIdEmpleada();?></td>
-                            <td><?php echo $vRow->getNombre();?></td>
-                            <td><?php echo $vRow->getDepto()->getDepto();?></td>
-                            <td>
-                                <input type="submit" value="Modificar" class="btn btn-warning" onClick="txtClave.value=<?php echo $vRow->getIdEmpleada();?>; txtOp.value='m';">
-                                <input type="submit" value="Eliminar" class="btn btn-danger" onClick="txtClave.value=<?php echo $vRow->getIdEmpleada();?>; txtOp.value='e';">
-                            </td>
-                        </tr>
-                        <?php
-                    }
-                }else{
-                    ?>
-                    <td>No se encontraron registros</td>
-                    <?php
-                }
+        <form class="form-horizontal form-label-left" id="frmusuarios" action="Controladores/accionSoftware.php.php" method="post">
+            <input type="hidden" name="txtUser" value="<?php echo($sOp == 'a' ? '' : $oUsuario->getIdUsuario());?>">
+            <input type="hidden" name="txtOp" value="<?php echo $sOp;?>">
+            <h2><span class="section">CONTROL DE USUARIOS</span></h2>
+            <?php
+            if($sOp != 'a'){
                 ?>
-                </tbody>
-            </table>
-            <input type="submit" value="Agregar Departamento" class="btn btn-primary" onClick="txtClave.value='-1';txtOp.value='a'">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="iduser">ID SOFTWARE
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="iduser" class="form-control col-md-7 col-xs-12" name="iduser" type="text" disabled value="<?php echo $oUsuario->getIdUsuario();?>">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtNombre">NOMBRE DE USUARIO
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="txtNombre" name="txtNombre"  class="form-control col-md-7 col-xs-12"
+                               value="<?php echo($bLlave == true ? '' : $oUsuario->getUsuario());?>" <?php echo($sOp == 'm' ? 'required' : '');?> <?php echo($sOp == 'm' ? '' : 'disabled');?> >
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtPass1">PASSWORD (OPCIONAL)
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="password" id="txtPass1" name="txtPass1"  class="form-control col-md-7 col-xs-12" <?php echo ($sOp == 'e' ? 'disabled' : '');?>>
+                    </div>
+                </div>
+                <?php
+            }else{
+                ?>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtNombre">NOMBRE DE USUARIO <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="txtNombre" name="txtNombre" required class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="txtPass">PASSWORD <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="password" id="txtPass" name="txtPass" required class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <?php
+            }
+            ?>
+
+            <input type="submit" value="<?php echo $sMensaje;?>" class="btn btn-primary">
         </form>
 
 
@@ -320,3 +353,5 @@ $sRuta = "controlEmpleados.php";
 
 
 
+
+?>

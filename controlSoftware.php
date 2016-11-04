@@ -7,21 +7,28 @@ session_start();
 $oUser = new Usuarios();
 $oSoft = new Software();
 $error = "";
+$sErr2 = "";
 $sNom;
 $arrSoft=null;
-if (isset($_SESSION['sUser']) and !empty($_SESSION['sUser'])){
+$sRuta="controlDepto.php";
+if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
     $oUser = $_SESSION['sUser'];
-    $sNom = $oUser->getUsuario();
-    $arrSoft = $oSoft->buscarTodos();
+    if($oUser->buscarDatosUsuario()){
+        $sNom = $oUser->getUsuario();
+        $arrSoft = $oSoft->buscarTodos();
+    }else{
+        $sErr2 = "Usuario no registrado";
+    }
+
 }else{
-
-    $error = "error de sesión";
-}
-if ($error != ""){
-    header("Location: error.php?sError=".$error);
+    $sErr = "Faltan datos de sesión";
 }
 
-
+if($sErr != "") {
+    header("Location: error.php?sError=".$sErr);
+}else if($sErr2 != ""){
+    header("Location: errorProceso.php?sError=".$sErr2."&sRuta=".$sRuta);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
